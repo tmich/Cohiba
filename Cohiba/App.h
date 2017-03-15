@@ -8,7 +8,6 @@ public:
 	virtual ~CFrameApp();
 	virtual BOOL InitInstance();
 	CMainFrame& GetMainFrame() { return m_Frame; }
-
 private:
 	CMainFrame m_Frame;
 };
