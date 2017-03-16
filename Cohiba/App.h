@@ -10,6 +10,7 @@ public:
 	CMainFrame& GetMainFrame() { return m_Frame; }
 private:
 	CMainFrame m_Frame;
+	HMODULE hgridmod;
 };
 
 

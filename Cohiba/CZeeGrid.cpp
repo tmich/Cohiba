@@ -61,19 +61,19 @@ CZeeGrid::CZeeGrid(unsigned int columns)
 
 // construct a grid with specified rows and columns
 CZeeGrid::CZeeGrid(unsigned int rows, unsigned int columns)
-	: m_cols(columns), m_rows(rows)
+	: m_cols(columns), m_rows(rows), hgridmod{ nullptr }
 {
 	InitGrid();
 }
 
 CZeeGrid::~CZeeGrid()
 {
-	::FreeLibrary(hgridmod);
+	::SendMessage(m_hWnd, ZGM_EMPTYGRID, 0, 0);
 }
 
 void CZeeGrid::AppendRow()
 {
-	int cellIdx = SendMessage(m_hWnd, ZGM_APPENDROW, 0, 0);
+	int cellIdx = ::SendMessage(m_hWnd, ZGM_APPENDROW, 0, 0);
 	m_rows++;
 }
 
@@ -98,20 +98,19 @@ void CZeeGrid::SetCellValue(unsigned int index, double val)
 	::SendMessage(m_hWnd, ZGM_SETCELLDOUBLE, index, (LPARAM)&val);
 }
 
-
 void CZeeGrid::Refresh()
 {
-	SendMessage(m_hWnd, ZGM_REFRESHGRID, 0, 0);
+	::SendMessage(m_hWnd, ZGM_REFRESHGRID, 0, 0);
 }
 
 void CZeeGrid::InitGrid()
 {
-	hgridmod = ::LoadLibrary(_T("zeegrid.dll"));
+	/*hgridmod = ::LoadLibrary(_T("zeegrid.dll"));
 	if (!hgridmod)
 	{
 		::MessageBox(m_hWnd, _T("Unable to load ZeeGrid.DLL"), _T("Error"), MB_OK);
-		PostQuitMessage(0);
-	}
+		::PostQuitMessage(0);
+	}*/
 
 	// The entry for the dialog's control in resource.rc must match this name.
 	CString ClassName = _T("ZeeGrid");
@@ -133,10 +132,11 @@ void CZeeGrid::InitGrid()
 
 void CZeeGrid::OnInitialUpdate()
 {
-	SendMessage(m_hWnd, ZGM_DIMGRID, m_cols, 0);
+	::SendMessage(m_hWnd, ZGM_DIMGRID, m_cols, 0);
+	
 	// Add rows
 	for (size_t i = 0; i < m_rows; i++)
-		SendMessage(m_hWnd, ZGM_APPENDROW, 0, 0);
+		::SendMessage(m_hWnd, ZGM_APPENDROW, 0, 0);
 }
 
 LRESULT CZeeGrid::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -1,9 +1,13 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "mainfrm.h"
-#include "DlgArticoli.h"
+#include "Dbconn.h"
+#include "dbsettings.h"
+#include <mariadb++\exceptions.hpp>
+#include "dlgsettings.h"
 
 CMainFrame::CMainFrame()
+	:m_strKeyName{ _T("GestionaleM2\\Cohiba") }
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -12,7 +16,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Emme\\Cohiba"));
+	LoadRegistrySettings(m_strKeyName);
 }
 
 CMainFrame::~CMainFrame()
@@ -67,6 +71,25 @@ void CMainFrame::OnInitialUpdate()
 	// Titolo
 	m_Title.LoadStringW(IDS_APP_TITLE);
 	SetTitle(m_Title);
+
+	// provo la connessione al database
+	try
+	{
+		MyConnectionProvider provider;
+		auto conn = provider.connect();
+	}
+	catch (const mariadb::exception::connection& cnex)
+	{
+		TRACE(cnex.what());
+		this->Error(cnex.what());
+		SettingsDialog dlgs;
+		dlgs.DoModal(*this);
+	}
+	catch (const CWinException& winexc)
+	{
+		TRACE(winexc.what());
+		this->Error(_T("Non sono riuscito a leggere il registro di sistema"));
+	}
 
 	TRACE("Frame created\n");
 }
@@ -180,10 +203,72 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(uMsg, wParam, lParam);
 }
 
+BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
+{
+	CFrame::LoadRegistrySettings(szKeyName);
+
+	//// Leggo le impostazione del db
+	//TCHAR szServer[201] = { 0 };
+	//TCHAR szNome[201] = { 0 };
+	//TCHAR szUsername[201] = { 0 };
+	//TCHAR szPswd[201] = { 0 };
+	//ULONG usz = 200;
+	//CString KeyName = _T("Software\\") + m_strKeyName;
+	//CString SubKey = KeyName + _T("\\Database");
+	//CRegKey Key;
+
+	//// se la chiave di registro non esiste: la creo...
+	//if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, SubKey, KEY_READ))
+	//{
+	//	if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, SubKey))
+	//		throw CWinException(_T("RegCreateKeyEx failed"));
+
+	//	// ...la apro...
+	//	if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, SubKey))
+	//		throw CWinException(_T("RegCreateKeyEx failed"));
+	//	
+	//	// ... e ci scrivo i valori di default
+	//	if (ERROR_SUCCESS != Key.SetStringValue(_T("Server"), _T("127.0.0.1")))
+	//		throw CWinException(_T("RegSetValueEx failed"));
+	//	if (ERROR_SUCCESS != Key.SetStringValue(_T("Nome"), _T("tabacchi")))
+	//		throw CWinException(_T("RegSetValueEx failed"));
+	//	if (ERROR_SUCCESS != Key.SetStringValue(_T("Username"), _T("pippo")))
+	//		throw CWinException(_T("RegSetValueEx failed"));
+	//	if (ERROR_SUCCESS != Key.SetStringValue(_T("Password"), _T("pluto")))
+	//		throw CWinException(_T("RegSetValueEx failed"));
+	//}
+
+	//if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, SubKey, KEY_READ))
+	//{
+	//	// se esiste la chiave, leggo le informazioni
+	//	if (ERROR_SUCCESS != Key.QueryStringValue(_T("Server"), szServer, &usz))
+	//		throw CWinException(_T("QueryStringValue Failed"));
+	//	if (ERROR_SUCCESS != Key.QueryStringValue(_T("Nome"), szNome, &usz))
+	//		throw CWinException(_T("QueryStringValue Failed"));
+	//	if (ERROR_SUCCESS != Key.QueryStringValue(_T("Username"), szUsername, &usz))
+	//		throw CWinException(_T("QueryStringValue Failed"));
+	//	if (ERROR_SUCCESS != Key.QueryStringValue(_T("Password"), szPswd, &usz))
+	//		throw CWinException(_T("QueryStringValue Failed"));
+	//}
+	return 0;
+}
+
+BOOL CMainFrame::SaveRegistrySettings()
+{
+	CFrame::SaveRegistrySettings();
+	//CString KeyName = _T("Software\\") + m_strKeyName + _T("\\DB Settings");
+	return 0;
+}
+
 BOOL CMainFrame::OnArticoli()
 {
 	DlgArticoli dlgArticoli;
 	dlgArticoli.DoModal(*this);
-
+	
 	return 0;
+}
+
+void CMainFrame::Error(CString message) const
+{
+	this->MessageBox(message.c_str(), _T("Errore"), MB_ICONERROR | MB_OK);
 }

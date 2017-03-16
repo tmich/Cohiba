@@ -20,6 +20,7 @@
 #include <stdlib.h>				// Add support for C style character conversions atoi etc. 
 #include <tchar.h>				// Add support for C style TCHARs.
 
+#include "wc_to_mb.h"
 #include <wxx_appcore.h>		// Add CCriticalSection, CObject, CWinThread, CWinApp
 #include <wxx_archive.h>		// Add CArchive
 #include <wxx_commondlg.h>		// Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog 

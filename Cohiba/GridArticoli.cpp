@@ -16,7 +16,7 @@ void GridArticoli::OnInitialUpdate()
 	int idx = 1;
 	CZeeGrid::OnInitialUpdate();
 
-	MyConnection myconn;
+	MyConnectionProvider myconn;
 	auto cnn = myconn.connect();
 	//mariadb::result_set_ref rs = cnn->query("select id, codice, nome, confezione, prezzo_kg from articolo limit 30;");
 	mariadb::statement_ref stmt = cnn->create_statement("select id, codice, nome, confezione, prezzo_kg from articolo;");
@@ -49,4 +49,7 @@ void GridArticoli::OnInitialUpdate()
 	}
 
 	cnn->disconnect();
+
+	//auto size all columns
+	::SendMessage(m_hWnd, ZGM_AUTOSIZE_ALL_COLUMNS, 0, 0);
 }

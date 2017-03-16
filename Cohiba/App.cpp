@@ -7,6 +7,8 @@ CFrameApp::CFrameApp()
 
 CFrameApp::~CFrameApp()
 {
+	// unload ZeeGrid.dll
+	::FreeLibrary(hgridmod);
 }
 
 BOOL CFrameApp::InitInstance()
@@ -18,6 +20,14 @@ BOOL CFrameApp::InitInstance()
 
 		::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
 		return FALSE; // returning FALSE ends the application
+	}
+
+	// load ZeeGrid.dll
+	hgridmod = ::LoadLibrary(_T("zeegrid.dll"));
+	if (!hgridmod)
+	{
+		m_Frame.Error(_T("Unable to load zeegrid.dll"));
+		::PostQuitMessage(0);
 	}
 
 	return TRUE;

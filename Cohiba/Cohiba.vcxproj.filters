@@ -51,6 +51,18 @@
     <ClInclude Include="GridArticoli.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dbsettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wc_to_mb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dlgsettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ipaddress.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -78,6 +90,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GridArticoli.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dbsettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wc_to_mb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dlgsettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ipaddress.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
