@@ -25,9 +25,15 @@ public:
 	void SetCellValue(unsigned int index, std::string);
 	void SetCellValue(unsigned int index, int);
 	void SetCellValue(unsigned int index, double);
+	
+	int GetSelectedCellIndex() const;
+	int GetRowIndex(int cellIndex) const;
+	std::string GetCellText(int cellIndex) const;
+	std::wstring GetCellTextW(int cellIndex) const;
 protected:
 	void InitGrid();
 	void OnInitialUpdate() override;
+	//virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 	void Refresh();

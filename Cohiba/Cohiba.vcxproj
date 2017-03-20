@@ -173,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="articolo.h" />
     <ClInclude Include="CZeeGrid.h" />
     <ClInclude Include="Dbconn.h" />
     <ClInclude Include="dbsettings.h" />
@@ -190,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="articolo.cpp" />
     <ClCompile Include="CZeeGrid.cpp" />
     <ClCompile Include="dbsettings.cpp" />
     <ClCompile Include="DlgArticoli.cpp" />

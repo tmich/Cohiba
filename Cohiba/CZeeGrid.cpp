@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CZeeGrid.h"
+#include <memory>
 
 ///*************** UTILS *********************///
 std::string Utils::StringToUpper(std::string strToConvert)
@@ -68,12 +69,12 @@ CZeeGrid::CZeeGrid(unsigned int rows, unsigned int columns)
 
 CZeeGrid::~CZeeGrid()
 {
-	::SendMessage(m_hWnd, ZGM_EMPTYGRID, 0, 0);
+	//this->SendMessage(ZGM_EMPTYGRID, 0, 0);
 }
 
 void CZeeGrid::AppendRow()
 {
-	int cellIdx = ::SendMessage(m_hWnd, ZGM_APPENDROW, 0, 0);
+	int cellIdx = this->SendMessage(ZGM_APPENDROW, 0, 0);
 	m_rows++;
 }
 
@@ -85,22 +86,55 @@ void CZeeGrid::SetCellValue(unsigned int index, std::wstring text)
 
 void CZeeGrid::SetCellValue(unsigned int index, std::string text)
 {
-	::SendMessage(m_hWnd, ZGM_SETCELLTEXT, index, (LPARAM)text.c_str());
+	this->SendMessage(ZGM_SETCELLTEXT, index, (LPARAM)text.c_str());
 }
 
 void CZeeGrid::SetCellValue(unsigned int index, int val)
 {
-	::SendMessage(m_hWnd, ZGM_SETCELLINT, index, (LPARAM)&val);
+	this->SendMessage(ZGM_SETCELLINT, index, (LPARAM)&val);
 }
 
 void CZeeGrid::SetCellValue(unsigned int index, double val)
 {
-	::SendMessage(m_hWnd, ZGM_SETCELLDOUBLE, index, (LPARAM)&val);
+	this->SendMessage(ZGM_SETCELLDOUBLE, index, (LPARAM)&val);
+}
+
+int CZeeGrid::GetSelectedCellIndex() const
+{
+	int cursorIndex = this->SendMessage(ZGM_GETCURSORINDEX, 0, 0);
+	return cursorIndex;
+}
+
+int CZeeGrid::GetRowIndex(int cellIndex) const
+{
+	int rowIndex = this->SendMessage(ZGM_GETROWOFINDEX, (WPARAM)cellIndex, 0);
+	return rowIndex;
+}
+
+std::string CZeeGrid::GetCellText(int cellIndex) const
+{
+	std::string cellText;
+	int len = this->SendMessage(ZGM_GETCELLTEXTLENGTH, cellIndex, 0);
+	if (len > 0)
+	{
+		//char * lpszCellText = new char[len + 1];
+		std::unique_ptr<char> lpszCellText{ new char[len + 1] };
+		this->SendMessageW(ZGM_GETCELLTEXT, cellIndex, (LPARAM)lpszCellText.get());
+		cellText.assign(lpszCellText.get());
+	}
+
+	return cellText;
+}
+
+std::wstring CZeeGrid::GetCellTextW(int cellIndex) const
+{
+	std::wstring ws;
+	return Utils::s2ws(GetCellText(cellIndex));
 }
 
 void CZeeGrid::Refresh()
 {
-	::SendMessage(m_hWnd, ZGM_REFRESHGRID, 0, 0);
+	this->SendMessage(ZGM_REFRESHGRID, 0, 0);
 }
 
 void CZeeGrid::InitGrid()
@@ -132,12 +166,17 @@ void CZeeGrid::InitGrid()
 
 void CZeeGrid::OnInitialUpdate()
 {
-	::SendMessage(m_hWnd, ZGM_DIMGRID, m_cols, 0);
+	this->SendMessage(ZGM_DIMGRID, m_cols, 0);
 	
 	// Add rows
 	for (size_t i = 0; i < m_rows; i++)
-		::SendMessage(m_hWnd, ZGM_APPENDROW, 0, 0);
+		this->SendMessage(ZGM_APPENDROW, 0, 0);
 }
+
+//BOOL CZeeGrid::OnCommand(WPARAM wParam, LPARAM lParam)
+//{
+//	return CWnd::OnCommand(wParam, lParam);
+//}
 
 LRESULT CZeeGrid::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {

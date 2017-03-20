@@ -14,11 +14,13 @@ BOOL DlgArticoli::OnInitDialog()
 	m_title.LoadStringW(IDS_ARTICOLI);
 	this->SetWindowTextW(m_title);
 
+	AttachItem(IDC_EDIT1, m_Edit1);
+
 	// Attach the custom control to a CWnd object
 	m_Grid.AttachDlgItem(IDC_CUSTOM1, *this);
 	
 	m_Resizer.Initialize(*this, CRect(0, 0, 300, 200));
-	m_Resizer.AddChild(m_Grid, bottomleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+	m_Resizer.AddChild(m_Grid, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 	
 	return 0;
 }
@@ -35,6 +37,33 @@ INT_PTR DlgArticoli::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
+}
+
+BOOL DlgArticoli::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	switch (LOWORD(wParam))
+	{
+	case IDC_CUSTOM1:
+	{
+		switch (HIWORD(wParam))
+		{
+		case ZGN_CURSORCELLCHANGED:
+		{
+			int cursorIndex = m_Grid.GetSelectedCellIndex();
+			int rowIndex = m_Grid.GetRowIndex(cursorIndex);
+			if (cursorIndex >= 0)
+			{
+				Articolo art = m_Grid.GetArticolo(rowIndex);
+				m_Edit1.SetWindowTextW(art.getNome().c_str());
+			}
+		}
+		break;
+		}
+	}
+	default:
+		break;
+	}
+	return 0;
 }
 
 DlgArticoli::~DlgArticoli()

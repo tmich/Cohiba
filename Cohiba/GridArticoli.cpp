@@ -11,10 +11,36 @@ GridArticoli::~GridArticoli()
 {
 }
 
+std::string GridArticoli::GetNome(int row)
+{
+	int cellIndex = (row * 5) + 3;
+	return GetCellText(cellIndex);
+}
+
+Articolo GridArticoli::GetArticolo(int row)
+{
+	int id = atoi(GetCellText((row * 5) + 1).c_str());
+	std::wstring codice = GetCellTextW((row * 5) + 2);
+	std::wstring nome = GetCellTextW((row * 5) + 3);
+	std::wstring confezione = GetCellTextW((row * 5) + 4);
+	double prezzo = std::atof(GetCellText((row * 5) + 5).c_str());
+	
+	Articolo art;
+	art.setId(id);
+	art.setNome(nome);
+	art.setConfezione(confezione);
+	art.setPrezzoKg(prezzo);
+
+	return art;
+}
+
 void GridArticoli::OnInitialUpdate()
 {
 	int idx = 1;
 	CZeeGrid::OnInitialUpdate();
+
+	// hide window
+	ShowWindow(0);
 
 	MyConnectionProvider myconn;
 	auto cnn = myconn.connect();
@@ -52,4 +78,12 @@ void GridArticoli::OnInitialUpdate()
 
 	//auto size all columns
 	::SendMessage(m_hWnd, ZGM_AUTOSIZE_ALL_COLUMNS, 0, 0);
+
+	// show window
+	ShowWindow(1);
+}
+
+BOOL GridArticoli::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	return 0;
 }
