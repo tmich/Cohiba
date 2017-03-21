@@ -5,6 +5,7 @@
 #include "dbsettings.h"
 #include <mariadb++\exceptions.hpp>
 #include "dlgsettings.h"
+#include "dlgordine.h"
 
 CMainFrame::CMainFrame()
 	:m_strKeyName{ _T("GestionaleM2\\Cohiba") }
@@ -33,7 +34,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch (LOWORD(wParam))
 	{
 	case IDM_TABELLE_ARTICOLI:  return OnArticoli();
-	case IDM_MAGAZZINO_CARICO:	break;
+	case IDM_MAGAZZINO_CARICO:	return OnCaricoMagazzino();
+	case IDM_NUOVOORDINE:		return OnNuovoOrdine();
 	case IDM_EXIT:				return OnFileExit();
 	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
 	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
@@ -90,6 +92,9 @@ void CMainFrame::OnInitialUpdate()
 		TRACE(winexc.what());
 		this->Error(_T("Non sono riuscito a leggere il registro di sistema"));
 	}
+
+	// a tutto schermo
+	ShowWindow(SW_MAXIMIZE);
 
 	TRACE("Frame created\n");
 }
@@ -256,7 +261,6 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 BOOL CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
-	//CString KeyName = _T("Software\\") + m_strKeyName + _T("\\DB Settings");
 	return 0;
 }
 
@@ -264,7 +268,18 @@ BOOL CMainFrame::OnArticoli()
 {
 	DlgArticoli dlgArticoli;
 	dlgArticoli.DoModal(*this);
-	
+	return 0;
+}
+
+BOOL CMainFrame::OnCaricoMagazzino()
+{
+	return 0;
+}
+
+BOOL CMainFrame::OnNuovoOrdine()
+{
+	OrdineDialog odlg;
+	odlg.DoModal(*this);
 	return 0;
 }
 

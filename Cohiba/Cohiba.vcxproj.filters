@@ -66,6 +66,12 @@
     <ClInclude Include="articolo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dlgordine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GridOrdine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -108,6 +114,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="articolo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dlgordine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GridOrdine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

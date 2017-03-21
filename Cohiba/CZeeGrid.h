@@ -19,17 +19,19 @@ public:
 	CZeeGrid(unsigned int rows, unsigned int columns);
 	~CZeeGrid();
 
-	void AppendRow();
+	int AppendRow();
 	unsigned int RowCount() const { return m_rows; }
 	void SetCellValue(unsigned int index, std::wstring);
 	void SetCellValue(unsigned int index, std::string);
 	void SetCellValue(unsigned int index, int);
 	void SetCellValue(unsigned int index, double);
 	
+	void SelectFirstCellAt(int rowIndex) const;
 	int GetSelectedCellIndex() const;
 	int GetRowIndex(int cellIndex) const;
 	std::string GetCellText(int cellIndex) const;
 	std::wstring GetCellTextW(int cellIndex) const;
+	void EmptyGrid();
 protected:
 	void InitGrid();
 	void OnInitialUpdate() override;

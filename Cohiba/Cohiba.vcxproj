@@ -178,8 +178,10 @@
     <ClInclude Include="Dbconn.h" />
     <ClInclude Include="dbsettings.h" />
     <ClInclude Include="DlgArticoli.h" />
+    <ClInclude Include="dlgordine.h" />
     <ClInclude Include="dlgsettings.h" />
     <ClInclude Include="GridArticoli.h" />
+    <ClInclude Include="GridOrdine.h" />
     <ClInclude Include="ipaddress.h" />
     <ClInclude Include="Mainfrm.h" />
     <ClInclude Include="Resource.h" />
@@ -195,8 +197,10 @@
     <ClCompile Include="CZeeGrid.cpp" />
     <ClCompile Include="dbsettings.cpp" />
     <ClCompile Include="DlgArticoli.cpp" />
+    <ClCompile Include="dlgordine.cpp" />
     <ClCompile Include="dlgsettings.cpp" />
     <ClCompile Include="GridArticoli.cpp" />
+    <ClCompile Include="GridOrdine.cpp" />
     <ClCompile Include="ipaddress.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Dbconn.cpp" />

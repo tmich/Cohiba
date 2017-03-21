@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "GridArticoli.h"
-#include "Dbconn.h"
+#include <algorithm>
+#include <exception>
+
+const unsigned int GridArticoli::N_COLS = 5;
 
 GridArticoli::GridArticoli()
-	: CZeeGrid{ 5 }
+	: CZeeGrid{ N_COLS }
 {
 }
 
@@ -11,79 +14,101 @@ GridArticoli::~GridArticoli()
 {
 }
 
-std::string GridArticoli::GetNome(int row)
+void GridArticoli::SetArticoli(ListaArticoli & articoli)
 {
-	int cellIndex = (row * 5) + 3;
-	return GetCellText(cellIndex);
+	m_articoli = articoli;
 }
 
-Articolo GridArticoli::GetArticolo(int row)
+Articolo GridArticoli::GetArticoloAt(int row)
 {
-	int id = atoi(GetCellText((row * 5) + 1).c_str());
-	std::wstring codice = GetCellTextW((row * 5) + 2);
-	std::wstring nome = GetCellTextW((row * 5) + 3);
-	std::wstring confezione = GetCellTextW((row * 5) + 4);
-	double prezzo = std::atof(GetCellText((row * 5) + 5).c_str());
+	int id = SendMessage(ZGM_GETITEMDATA, row * N_COLS + 1, 0);
+	/*auto it = std::find_if(m_articoli.begin(), m_articoli.end(), [id](const Articolo& art) 
+	{
+		return art.getId() == id;
+	});
 	
-	Articolo art;
-	art.setId(id);
-	art.setNome(nome);
-	art.setConfezione(confezione);
-	art.setPrezzoKg(prezzo);
+	return *it;
+	*/
+	return m_articoli[id];
+}
 
-	return art;
+int GridArticoli::FilterByNome(const std::wstring & descr)
+{
+	ListaArticoli matches;
+
+	for (auto& art : m_articoli)
+	{
+		std::wstring artNome = art.getNome();
+		if (artNome.find(descr.c_str()) != std::wstring::npos)
+		{
+			matches.append(art);
+		}
+	}
+
+	Update(matches);
+
+	return 0;
 }
 
 void GridArticoli::OnInitialUpdate()
 {
-	int idx = 1;
 	CZeeGrid::OnInitialUpdate();
-
-	// hide window
+	
 	ShowWindow(0);
 
-	MyConnectionProvider myconn;
-	auto cnn = myconn.connect();
-	//mariadb::result_set_ref rs = cnn->query("select id, codice, nome, confezione, prezzo_kg from articolo limit 30;");
-	mariadb::statement_ref stmt = cnn->create_statement("select id, codice, nome, confezione, prezzo_kg from articolo;");
-	mariadb::result_set_ref rs = stmt->query();
-
-	// intestazioni
-	::SendMessage(m_hWnd, ZGM_SETCELLTEXT, idx++, (LPARAM)"ID");
-	::SendMessage(m_hWnd, ZGM_SETCELLTEXT, idx++, (LPARAM)"CODICE");
-	::SendMessage(m_hWnd, ZGM_SETCELLTEXT, idx++, (LPARAM)"NOME");
-	::SendMessage(m_hWnd, ZGM_SETCELLTEXT, idx++, (LPARAM)"CONFEZIONE");
-	::SendMessage(m_hWnd, ZGM_SETCELLTEXT, idx++, (LPARAM)"PREZZO KG");
+	GetParent().GetDC().DrawTextW(_T("Caricamento dati in corso..."), -1, GetClientRect(), DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	
-	// righe
-	while(rs->next())
-	{
-		int id = rs->get_unsigned32("id");
-		int codice = rs->get_unsigned32("codice");
+	// prealloco le righe
+	SendMessage(ZGM_ALLOCATEROWS, m_articoli.size() + 1, 0);
 
-		std::wstring nome{ rs->get_wstring("nome") };
-		std::wstring conf{ rs->get_wstring("confezione") };
-		std::string s_przkg = rs->get_string("prezzo_kg");
-		mariadb::decimal prezzo_kg{ s_przkg.c_str() };
-		AppendRow();
-		
-		SetCellValue(idx++, id);
-		SetCellValue(idx++, codice);
-		SetCellValue(idx++, nome);
-		SetCellValue(idx++, conf);
-		SetCellValue(idx++, prezzo_kg.str());
-	}
+	// mostro il numero di riga
+	SendMessage(ZGM_SHOWROWNUMBERS, true, 0);
 
-	cnn->disconnect();
+	// righe alternate
+	SendMessage(ZGM_ALTERNATEROWCOLORS, true, 8);
+	
+	// intestazioni
+	int idx = 1;
+	SetCellValue(idx++, _T("CODICE"));
+	SetCellValue(idx++, _T("NOME"));
+	SetCellValue(idx++, _T("CONFEZIONE"));
+	SetCellValue(idx++, _T("PREZZO KG"));
+	SetCellValue(idx++, _T("BARCODE"));
+	
+	// dati
+	Update();
 
-	//auto size all columns
-	::SendMessage(m_hWnd, ZGM_AUTOSIZE_ALL_COLUMNS, 0, 0);
-
-	// show window
 	ShowWindow(1);
 }
 
 BOOL GridArticoli::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	return 0;
+	return CZeeGrid::OnCommand(wParam, lParam);
+}
+
+void GridArticoli::Update()
+{
+	Update(m_articoli);
+}
+
+void GridArticoli::Update(ListaArticoli & articoli)
+{
+	//SendMessage(ZGM_EMPTYGRID, (WPARAM)TRUE, 0);
+	EmptyGrid();
+
+	// righe
+	for (size_t i = 0; i <articoli.size(); i++)
+	{
+		int idx = AppendRow();
+		Articolo a = articoli[i];
+		SendMessage(ZGM_SETITEMDATA, idx, i);
+		SetCellValue(idx++, a.getCodice());
+		SetCellValue(idx++, a.getNome());
+		SetCellValue(idx++, a.getConfezione());
+		SetCellValue(idx++, a.getPrezzoKg());
+		SetCellValue(idx++, a.getBarcode());
+	}
+
+	//auto size all columns
+	::SendMessage(m_hWnd, ZGM_AUTOSIZE_ALL_COLUMNS, 0, 0);
 }

@@ -24,7 +24,10 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL	LoadRegistrySettings(LPCTSTR szKeyName) override;
 	virtual BOOL	SaveRegistrySettings() override;
+	
 	virtual BOOL	OnArticoli();
+	virtual BOOL	OnCaricoMagazzino();
+	virtual BOOL	OnNuovoOrdine();
 
 private:
 	CView m_View;

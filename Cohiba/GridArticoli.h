@@ -8,11 +8,17 @@ public:
 	GridArticoli();
 	virtual ~GridArticoli();
 	
-	std::string GetNome(int row);
-	Articolo GetArticolo(int row);
+	void SetArticoli(ListaArticoli& articoli);
+	Articolo GetArticoloAt(int rowIndex);
+	int FilterByNome(const std::wstring& descr);
 protected:
 	void OnInitialUpdate() override;
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
-	unsigned const int N_COLS = 5;
+	void Update();
+	void Update(ListaArticoli& articoli);
+
+	ListaArticoli m_articoli;
+	const unsigned static int N_COLS;
+	//int idx = 1;
 	int m_RowSelected = -1;
 };

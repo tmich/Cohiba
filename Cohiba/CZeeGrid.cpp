@@ -72,10 +72,11 @@ CZeeGrid::~CZeeGrid()
 	//this->SendMessage(ZGM_EMPTYGRID, 0, 0);
 }
 
-void CZeeGrid::AppendRow()
+int CZeeGrid::AppendRow()
 {
 	int cellIdx = this->SendMessage(ZGM_APPENDROW, 0, 0);
 	m_rows++;
+	return cellIdx;
 }
 
 void CZeeGrid::SetCellValue(unsigned int index, std::wstring text)
@@ -97,6 +98,11 @@ void CZeeGrid::SetCellValue(unsigned int index, int val)
 void CZeeGrid::SetCellValue(unsigned int index, double val)
 {
 	this->SendMessage(ZGM_SETCELLDOUBLE, index, (LPARAM)&val);
+}
+
+void CZeeGrid::SelectFirstCellAt(int rowIndex) const
+{
+	this->SendMessageW(ZGM_SETCURSORCELL, (rowIndex * this->m_cols) + 1);
 }
 
 int CZeeGrid::GetSelectedCellIndex() const
@@ -130,6 +136,16 @@ std::wstring CZeeGrid::GetCellTextW(int cellIndex) const
 {
 	std::wstring ws;
 	return Utils::s2ws(GetCellText(cellIndex));
+}
+
+void CZeeGrid::EmptyGrid()
+{
+	SendMessage(ZGM_EMPTYGRID, (WPARAM)TRUE, 0);
+	m_rows = 1;
+	/*for (size_t i = 1; i < m_rows; i++)
+		SendMessage(ZGM_DELETEROW, (WPARAM)i, 0);
+
+	Refresh();*/
 }
 
 void CZeeGrid::Refresh()
