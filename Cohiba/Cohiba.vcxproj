@@ -173,17 +173,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="artdao.h" />
     <ClInclude Include="articolo.h" />
     <ClInclude Include="CZeeGrid.h" />
     <ClInclude Include="Dbconn.h" />
     <ClInclude Include="dbsettings.h" />
     <ClInclude Include="DlgArticoli.h" />
     <ClInclude Include="dlgordine.h" />
+    <ClInclude Include="dlgsceltaarticolo.h" />
     <ClInclude Include="dlgsettings.h" />
     <ClInclude Include="GridArticoli.h" />
-    <ClInclude Include="GridOrdine.h" />
+    <ClInclude Include="gridvociordine.h" />
+    <ClInclude Include="gui.h" />
     <ClInclude Include="ipaddress.h" />
     <ClInclude Include="Mainfrm.h" />
+    <ClInclude Include="ordine.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -193,18 +197,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="artdao.cpp" />
     <ClCompile Include="articolo.cpp" />
     <ClCompile Include="CZeeGrid.cpp" />
     <ClCompile Include="dbsettings.cpp" />
     <ClCompile Include="DlgArticoli.cpp" />
     <ClCompile Include="dlgordine.cpp" />
+    <ClCompile Include="dlgsceltaarticolo.cpp" />
     <ClCompile Include="dlgsettings.cpp" />
     <ClCompile Include="GridArticoli.cpp" />
-    <ClCompile Include="GridOrdine.cpp" />
+    <ClCompile Include="gridvociordine.cpp" />
+    <ClCompile Include="gui.cpp" />
     <ClCompile Include="ipaddress.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Dbconn.cpp" />
     <ClCompile Include="Mainfrm.cpp" />
+    <ClCompile Include="ordine.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

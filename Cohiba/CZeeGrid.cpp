@@ -87,7 +87,8 @@ void CZeeGrid::SetCellValue(unsigned int index, std::wstring text)
 
 void CZeeGrid::SetCellValue(unsigned int index, std::string text)
 {
-	this->SendMessage(ZGM_SETCELLTEXT, index, (LPARAM)text.c_str());
+	const char *lspz = text.c_str();
+	this->SendMessage(ZGM_SETCELLTEXT, index, (LPARAM)lspz);
 }
 
 void CZeeGrid::SetCellValue(unsigned int index, int val)
@@ -142,10 +143,6 @@ void CZeeGrid::EmptyGrid()
 {
 	SendMessage(ZGM_EMPTYGRID, (WPARAM)TRUE, 0);
 	m_rows = 1;
-	/*for (size_t i = 1; i < m_rows; i++)
-		SendMessage(ZGM_DELETEROW, (WPARAM)i, 0);
-
-	Refresh();*/
 }
 
 void CZeeGrid::Refresh()

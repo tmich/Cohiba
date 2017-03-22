@@ -69,7 +69,19 @@
     <ClInclude Include="dlgordine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GridOrdine.h">
+    <ClInclude Include="artdao.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dlgsceltaarticolo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ordine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gridvociordine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -119,7 +131,19 @@
     <ClCompile Include="dlgordine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GridOrdine.cpp">
+    <ClCompile Include="artdao.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dlgsceltaarticolo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ordine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gridvociordine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

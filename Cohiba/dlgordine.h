@@ -1,5 +1,6 @@
 #pragma once
-#include "GridOrdine.h"
+#include "gridvociordine.h"
+#include "ordine.h"
 
 class OrdineDialog : public CDialog
 {
@@ -7,6 +8,11 @@ public:
 	OrdineDialog();
 	virtual ~OrdineDialog();
 private:
+	virtual void OnCercaArticolo();
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
 	BOOL OnInitDialog() override;
-	GridOrdine m_Grid;
+	GridVociOrdine m_Grid;
+	CButton m_btnCercaArt;
+	CStatic m_Title;
+	Ordine m_Ordine;
 };

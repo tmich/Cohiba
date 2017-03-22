@@ -1,4 +1,13 @@
 #pragma once
+#include <string>
+
+namespace stringutils
+{
+	std::wstring to_upper(std::wstring str);
+	double to_double(std::wstring str);
+	double to_double(std::string str);
+}
+
 class wc_to_mb
 {
 public:

@@ -23,6 +23,9 @@ public:
 
 	std::wstring getBarcode() const { return m_barcode; }
 	void setBarcode(std::wstring barcode) { m_barcode = barcode; }
+
+	std::wstring getCategoria() const;
+	void setCategoria(int categoria) { m_cat = categoria; }
 protected:
 	int m_id;
 	std::wstring m_nome;
@@ -30,6 +33,7 @@ protected:
 	double m_prezzo_kg;
 	std::wstring m_confezione;
 	std::wstring m_barcode;
+	int m_cat;
 };
 
 class ListaArticoli
@@ -46,8 +50,21 @@ public:
 	std::vector<Articolo>::const_iterator begin();
 	std::vector<Articolo>::const_iterator end();
 	size_t size() const;
-	const Articolo& operator [] (int i) const;
+	Articolo& operator [] (int i);
 	void empty();
 protected:
 	std::vector<Articolo> m_vect;
+};
+
+class RicercaArticoli
+{
+public:
+	RicercaArticoli(const ListaArticoli&);
+	~RicercaArticoli();
+
+	ListaArticoli perNome(const std::wstring& nome);
+	ListaArticoli perCodice(const int codice);
+	ListaArticoli perBarcode(const std::wstring& barcode);
+protected:
+	ListaArticoli m_Lista;
 };

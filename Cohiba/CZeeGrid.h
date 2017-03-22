@@ -32,13 +32,13 @@ public:
 	std::string GetCellText(int cellIndex) const;
 	std::wstring GetCellTextW(int cellIndex) const;
 	void EmptyGrid();
+	void Refresh();
 protected:
 	void InitGrid();
 	void OnInitialUpdate() override;
 	//virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
-	void Refresh();
 
 	unsigned int m_cols;
 	unsigned int m_rows;

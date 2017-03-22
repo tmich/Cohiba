@@ -1,6 +1,5 @@
 #pragma once
-#include "View.h"
-#include "DlgArticoli.h"
+#include <memory>
 
 class CMainFrame : public CFrame
 {
@@ -30,7 +29,8 @@ protected:
 	virtual BOOL	OnNuovoOrdine();
 
 private:
-	CView m_View;
+	//CView m_View;
 	CString m_Title, m_strKeyName;
-	//DlgArticoli m_View;
+	//std::unique_ptr<OrdineDialog> odlg;
+	std::unique_ptr<CWnd> m_View;
 };

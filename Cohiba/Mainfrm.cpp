@@ -4,16 +4,20 @@
 #include "Dbconn.h"
 #include "dbsettings.h"
 #include <mariadb++\exceptions.hpp>
+#include "View.h"
+#include "DlgArticoli.h"
 #include "dlgsettings.h"
 #include "dlgordine.h"
 
+
 CMainFrame::CMainFrame()
-	:m_strKeyName{ _T("GestionaleM2\\Cohiba") }
+	:m_strKeyName{ _T("GestionaleM2\\Cohiba") },
+	m_View{ new CView }
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
 	//Set m_View as the view window of the frame
-	SetView(m_View);
+	SetView(*m_View);
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -23,6 +27,7 @@ CMainFrame::CMainFrame()
 CMainFrame::~CMainFrame()
 {
 	// Destructor for CMainFrame.
+	m_View.release();
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -273,13 +278,17 @@ BOOL CMainFrame::OnArticoli()
 
 BOOL CMainFrame::OnCaricoMagazzino()
 {
+	m_View.release();
+	m_View.reset(new CView);
+	SetView(*m_View);
 	return 0;
 }
 
 BOOL CMainFrame::OnNuovoOrdine()
 {
-	OrdineDialog odlg;
-	odlg.DoModal(*this);
+	m_View.release();
+	m_View.reset(new OrdineDialog);
+	SetView(*m_View);
 	return 0;
 }
 
