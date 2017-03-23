@@ -6,6 +6,8 @@ namespace stringutils
 	std::wstring to_upper(std::wstring str);
 	double to_double(std::wstring str);
 	double to_double(std::string str);
+	std::wstring to_wstring(double num, int precision = 2);
+	std::string to_string(double num, int precision = 2);
 }
 
 class wc_to_mb

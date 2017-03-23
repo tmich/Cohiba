@@ -3,7 +3,22 @@
 #include "wc_to_mb.h"
 
 Articolo::Articolo()
-	: m_id{ 0 }
+	: m_id{ 0 }, m_cat{ 0 }, m_codice{ 0 }, m_prezzo_kg{ 0.00 }
+{
+}
+
+Articolo::Articolo(int id, int codice, std::wstring nome, double prezzoKg, double prezzoConfezione, std::wstring confezione,
+	std::string unitaMisura, double qtaPerConfezione, int categoria, std::wstring barcode)
+	: m_id{ id },
+	m_codice{ codice },
+	m_nome{ nome },
+	m_prezzo_kg{ prezzoKg },
+	m_prezzo_conf{ prezzoConfezione },
+	m_confezione{ confezione },
+	m_unita_misura{ unitaMisura },
+	m_qta_conf{ qtaPerConfezione },
+	m_cat{ categoria },
+	m_barcode{ barcode }
 {
 }
 
@@ -32,6 +47,28 @@ std::wstring Articolo::getCategoria() const
 	default:
 		return _T("");
 	}
+}
+
+
+int Articolo::getQtaPerKg() const
+{
+	switch (m_cat)
+	{
+	case 1:	// SIGARETTE
+		return 1000;
+	case 2:	// SIGARI	
+		return 200;
+	case 3:	// SIGARETTI
+		return 400;
+	default:
+		return 1000;
+	}
+	return 0;
+}
+
+bool Articolo::operator==(const Articolo & rhs)
+{
+	return m_id == rhs.m_id;
 }
 
 ListaArticoli::ListaArticoli(std::vector<Articolo> articoli)
@@ -99,7 +136,6 @@ ListaArticoli RicercaArticoli::perNome(const std::wstring & nome)
 
 	for (const auto& art : m_Lista)
 	{
-		//std::wstring par = stringutils::to_upper(nome);
 		std::wstring artNome = stringutils::to_upper(art.getNome());
 
 		if (artNome.find(nome.c_str()) != std::wstring::npos)

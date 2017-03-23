@@ -51,6 +51,8 @@ std::wstring mb_to_wc::asStdWstring()
 	return std::wstring(m_pws);
 }
 
+/******* stringutils ********/
+
 std::wstring stringutils::to_upper(std::wstring str)
 {
 	std::locale loc;
@@ -84,4 +86,18 @@ double stringutils::to_double(std::string str)
 		f = 0.0;
 
 	return f;
+}
+
+std::wstring stringutils::to_wstring(double num, int precision)
+{
+	std::wostringstream wss;
+	wss << std::fixed << std::setprecision(precision) << num;
+	return wss.str();
+}
+
+std::string stringutils::to_string(double num, int precision)
+{
+	std::stringstream ss;
+	ss << std::fixed << std::setprecision(precision) << num;
+	return ss.str();
 }

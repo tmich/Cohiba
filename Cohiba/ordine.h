@@ -4,6 +4,7 @@
 class VoceOrdine
 {
 public:
+	//VoceOrdine();
 	VoceOrdine(Articolo art, double qta);
 	virtual ~VoceOrdine();
 
@@ -14,10 +15,12 @@ public:
 	std::wstring getBarcode() const { return m_articolo.getBarcode(); }
 	std::wstring getCategoria() const { return m_articolo.getCategoria(); }
 	double getQta() const { return m_qta; }
-
+	void setQta(double qta);
 	double getPrezzoTotKg() const;
+	double getNumConfezioni() const;
 
 	VoceOrdine operator=(const VoceOrdine&);
+	bool operator==(const VoceOrdine&);
 protected:
 	Articolo m_articolo;
 	double m_qta;

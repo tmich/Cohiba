@@ -12,7 +12,7 @@
 
 CMainFrame::CMainFrame()
 	:m_strKeyName{ _T("GestionaleM2\\Cohiba") },
-	m_View{ new CView }
+	m_View{std::make_unique<CView>() }
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -27,7 +27,10 @@ CMainFrame::CMainFrame()
 CMainFrame::~CMainFrame()
 {
 	// Destructor for CMainFrame.
-	m_View.release();
+	//m_View->Destroy();
+	/*auto ptr = m_View.reset();*/
+	/*delete ptr;*/
+	
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -278,16 +281,14 @@ BOOL CMainFrame::OnArticoli()
 
 BOOL CMainFrame::OnCaricoMagazzino()
 {
-	m_View.release();
-	m_View.reset(new CView);
+	m_View = std::make_unique<CView>();
 	SetView(*m_View);
 	return 0;
 }
 
 BOOL CMainFrame::OnNuovoOrdine()
 {
-	m_View.release();
-	m_View.reset(new OrdineDialog);
+	m_View = std::make_unique<OrdineDialog>();
 	SetView(*m_View);
 	return 0;
 }

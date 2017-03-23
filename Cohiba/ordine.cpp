@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "ordine.h"
 
+//VoceOrdine::VoceOrdine()
+//	: m_qta{ 0 }
+//{
+//}
+
 VoceOrdine::VoceOrdine(Articolo art, double qta)
 	: m_articolo{ art }, m_qta{ qta }
 {
@@ -10,9 +15,20 @@ VoceOrdine::~VoceOrdine()
 {
 }
 
+void VoceOrdine::setQta(double qta)
+{
+	m_qta = qta;
+}
+
 double VoceOrdine::getPrezzoTotKg() const
 {
 	return m_articolo.getPrezzoKg() * m_qta;
+}
+
+double VoceOrdine::getNumConfezioni() const
+{
+	int num = (int)((m_articolo.getQtaPerKg() * m_qta) / m_articolo.getQtaPerConfezione());
+	return num;
 }
 
 VoceOrdine VoceOrdine::operator=(const VoceOrdine & rhs)
@@ -23,13 +39,27 @@ VoceOrdine VoceOrdine::operator=(const VoceOrdine & rhs)
 	return *this;
 }
 
+bool VoceOrdine::operator==(const VoceOrdine & rhs)
+{
+	return m_articolo == rhs.m_articolo;
+}
+
 Ordine::Ordine()
 {
 }
 
 void Ordine::aggiungi(const VoceOrdine & voce)
 {
-	m_voci.push_back(voce);
+	auto it = std::find(m_voci.begin(), m_voci.end(), voce);
+
+	if (it == m_voci.end())
+	{
+		m_voci.push_back(voce);
+	}
+	else
+	{
+		*it = voce;
+	}
 }
 
 double Ordine::getPrezzoTotale() const

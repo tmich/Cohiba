@@ -2,8 +2,10 @@
 
 class Articolo
 {
-public:
 	Articolo();
+public:
+	Articolo(int id, int codice, std::wstring nome, double prezzoKg, double prezzoConfezione, std::wstring confezione,
+		std::string unitaMisura, double qtaPerConfezione, int categoria, std::wstring barcode);
 	virtual ~Articolo();
 
 	int getId() const { return m_id; }
@@ -26,11 +28,17 @@ public:
 
 	std::wstring getCategoria() const;
 	void setCategoria(int categoria) { m_cat = categoria; }
+
+	double getQtaPerConfezione() const { return m_qta_conf; }
+	int getQtaPerKg() const;
+
+	bool operator==(const Articolo&);
 protected:
 	int m_id;
 	std::wstring m_nome;
 	int m_codice;
-	double m_prezzo_kg;
+	std::string m_unita_misura;
+	double m_prezzo_kg, m_prezzo_conf, m_qta_conf;
 	std::wstring m_confezione;
 	std::wstring m_barcode;
 	int m_cat;
@@ -68,3 +76,10 @@ public:
 protected:
 	ListaArticoli m_Lista;
 };
+
+//class ConvertitoreUnita
+//{
+//public:
+//	ConvertitoreUnita(const Articolo& art);
+//	~ConvertitoreUnita();
+//};

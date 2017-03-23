@@ -4,19 +4,36 @@
 #include "resource.h"
 
 SceltaArticoloDialog::SceltaArticoloDialog()
-	: CDialog{ IDD_SCELTAART }, m_scelta{ nullptr }
+	: CDialog{ IDD_SCELTAART }, m_Scelta{ nullptr }, m_bScelta{ false }
 {
 }
 
 SceltaArticoloDialog::~SceltaArticoloDialog()
 {
-	m_scelta.release();
 }
 
-Articolo SceltaArticoloDialog::GetScelta()
+Articolo * SceltaArticoloDialog::GetArticolo()
 {
-	return *m_scelta;
+	return m_Scelta.release();
 }
+
+bool SceltaArticoloDialog::Ok()
+{
+	return m_bScelta;
+}
+
+//Articolo * SceltaArticoloDialog::GetScelta()
+//{
+//	return m_pArticoloScelto;
+//}
+
+//bool SceltaArticoloDialog::GetScelta(Articolo &art)
+//{
+//	if(m_bScelta)
+//		art = *m_Scelta;
+//
+//	return m_bScelta;
+//}
 
 BOOL SceltaArticoloDialog::OnInitDialog()
 {
@@ -95,8 +112,37 @@ void SceltaArticoloDialog::OnGridDblClick()
 	if (cellIndex >= 0)
 	{
 		int rowIndex = m_Grid.GetRowIndex(cellIndex);
-		m_scelta.release();
-		m_scelta.reset(&m_Grid.GetArticoloAt(rowIndex));
+		//m_pArticoloScelto = new Articolo{ m_Grid.GetArticoloAt(rowIndex) };
+		
+		m_Scelta = std::make_unique<Articolo>(m_Grid.GetArticoloAt(rowIndex));
+		m_bScelta = true;
 		EndDialog(IDOK);
 	}
+}
+
+
+/******* SceltaArticolo **********/
+
+SceltaArticolo::SceltaArticolo()
+{
+}
+
+SceltaArticolo::~SceltaArticolo()
+{
+}
+
+Articolo * SceltaArticolo::scegli()
+{
+	INT_PTR resp = dlg.DoModal();
+
+	if (resp == IDOK)
+	{
+		if (dlg.Ok())
+		{
+			auto p = dlg.GetArticolo();
+			return p;
+		}
+	}
+
+	return nullptr;
 }

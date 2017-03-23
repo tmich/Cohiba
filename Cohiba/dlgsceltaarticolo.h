@@ -8,7 +8,8 @@ public:
 	SceltaArticoloDialog();
 	~SceltaArticoloDialog();
 
-	Articolo GetScelta();
+	Articolo * GetArticolo();
+	bool Ok();
 protected:
 	BOOL OnInitDialog() override;
 	INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
@@ -21,5 +22,17 @@ protected:
 	ListaArticoli m_articoli;
 	CResizer m_Resizer;
 	CEdit m_txtCerca;
-	std::unique_ptr<Articolo> m_scelta;
+	std::unique_ptr<Articolo> m_Scelta;
+	bool m_bScelta;
+};
+
+class SceltaArticolo
+{
+public:
+	SceltaArticolo();
+	~SceltaArticolo();
+
+	Articolo * scegli();
+private:
+	SceltaArticoloDialog dlg;
 };

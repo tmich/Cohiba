@@ -29,8 +29,6 @@ protected:
 	virtual BOOL	OnNuovoOrdine();
 
 private:
-	//CView m_View;
 	CString m_Title, m_strKeyName;
-	//std::unique_ptr<OrdineDialog> odlg;
 	std::unique_ptr<CWnd> m_View;
 };

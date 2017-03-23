@@ -19,6 +19,7 @@
 #include <stdio.h>				// Add support for C style printf, sprintf, etc.
 #include <stdlib.h>				// Add support for C style character conversions atoi etc. 
 #include <tchar.h>				// Add support for C style TCHARs.
+#include <memory>
 
 #include "wc_to_mb.h"
 #include <wxx_appcore.h>		// Add CCriticalSection, CObject, CWinThread, CWinApp

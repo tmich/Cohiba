@@ -45,8 +45,9 @@ std::string Utils::ws2s(const std::wstring & ws)
 	size_t sz = s.size();
 	char * buff = new char[sz + 1]{ 0 };
 	::strcpy_s(buff, sz + 1, s.c_str());
-
-	return std::string{ buff };
+	std::string r{ buff };
+	delete[] buff;
+	return r;
 }
 ///*************** UTILS *********************///
 
@@ -124,8 +125,7 @@ std::string CZeeGrid::GetCellText(int cellIndex) const
 	int len = this->SendMessage(ZGM_GETCELLTEXTLENGTH, cellIndex, 0);
 	if (len > 0)
 	{
-		//char * lpszCellText = new char[len + 1];
-		std::unique_ptr<char> lpszCellText{ new char[len + 1] };
+		std::unique_ptr<char> lpszCellText = std::make_unique<char>(len + 1);
 		this->SendMessageW(ZGM_GETCELLTEXT, cellIndex, (LPARAM)lpszCellText.get());
 		cellText.assign(lpszCellText.get());
 	}
