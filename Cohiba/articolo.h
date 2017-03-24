@@ -11,7 +11,7 @@ class Articolo
 	Articolo();
 public:
 	Articolo(int id, int codice, std::wstring nome, double prezzoKg, double prezzoConfezione, std::wstring confezione,
-		std::string unitaMisura, double qtaPerConfezione, int categoria, std::wstring barcode);
+		std::string unitaMisura, double qtaPerConfezione, int categoria, std::wstring barcode, double aggio);
 	virtual ~Articolo();
 
 	int getId() const { return m_id; }
@@ -35,19 +35,28 @@ public:
 	std::wstring getCategoria() const;
 	void setCategoria(int categoria) { m_cat = categoria; }
 
+	double getPrezzoConfezione() const { return m_prezzo_conf; }
+	double getPesoUnitario() const;
+	double getPercentualeAggio() const { return m_perc_aggio; };
+
 	double getPezziPerConfezione() const { return m_qta_conf; }
-	int getPezziPerKg() const;
-	double getKg(double pezzi) const;
+	//int getPezziPerKg() const;
+	//double getKg(double pezzi) const;
 
 	UnitaMisura getUnitaMisura() const;
 
 	bool operator==(const Articolo&);
+	Articolo &Articolo::operator =(const Articolo &);
 protected:
+	const double PESO_SIGARETTE = 0.001;
+	const double PESO_SIGARETTI = 0.002;
+	const double PESO_SIGARI = 0.005;
+
 	int m_id;
 	std::wstring m_nome;
 	int m_codice;
 	std::string m_unita_misura;
-	double m_prezzo_kg, m_prezzo_conf, m_qta_conf;
+	double m_prezzo_kg, m_prezzo_conf, m_qta_conf, m_perc_aggio;
 	std::wstring m_confezione;
 	std::wstring m_barcode;
 	int m_cat;

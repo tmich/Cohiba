@@ -58,7 +58,7 @@ void GridArticoli::OnInitialUpdate()
 	int idx = 1;
 	SetCellValue(idx++, _T("CODICE"));
 	SetCellValue(idx++, _T("NOME"));
-	SetCellValue(idx++, _T("PREZZO KG"));
+	SetCellValue(idx++, _T("CU"));
 	SetCellValue(idx++, _T("CONFEZIONE"));
 	SetCellValue(idx++, _T("CATEGORIA"));
 	
@@ -93,7 +93,7 @@ void GridArticoli::Update()
 		SetCellValue(idx++, a.getCodice());
 		//SetCellValue(idx++, a.getBarcode());
 		SetCellValue(idx++, a.getNome());
-		SetCellValue(idx++, a.getPrezzoKg());
+		SetCellValue(idx++, a.getPrezzoConfezione());
 		SetCellValue(idx++, a.getConfezione());
 		SetCellValue(idx++, a.getCategoria());
 	}

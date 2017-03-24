@@ -8,7 +8,7 @@ Articolo::Articolo()
 }
 
 Articolo::Articolo(int id, int codice, std::wstring nome, double prezzoKg, double prezzoConfezione, std::wstring confezione,
-	std::string unitaMisura, double qtaPerConfezione, int categoria, std::wstring barcode)
+	std::string unitaMisura, double qtaPerConfezione, int categoria, std::wstring barcode, double aggio)
 	: m_id{ id },
 	m_codice{ codice },
 	m_nome{ nome },
@@ -18,7 +18,8 @@ Articolo::Articolo(int id, int codice, std::wstring nome, double prezzoKg, doubl
 	m_unita_misura{ unitaMisura },
 	m_qta_conf{ qtaPerConfezione },
 	m_cat{ categoria },
-	m_barcode{ barcode }
+	m_barcode{ barcode },
+	m_perc_aggio{ aggio }
 {
 }
 
@@ -49,37 +50,57 @@ std::wstring Articolo::getCategoria() const
 	}
 }
 
-
-int Articolo::getPezziPerKg() const
+double Articolo::getPesoUnitario() const
 {
-	switch (m_cat)
+	// PEZZI
+	if (getUnitaMisura() == UnitaMisura::PEZZI)
 	{
-	case 1:	// SIGARETTE
-		return 1000;
-	case 2:	// SIGARI	
-		return 200;
-	case 3:	// SIGARETTI
-		return 400;
-	default:
-		return 1000;
+		switch (m_cat)
+		{
+		case 1:	// SIGARETTE
+			return PESO_SIGARETTE * m_qta_conf;
+		case 2:	// SIGARI	
+			return PESO_SIGARI * m_qta_conf;
+		case 3:	// SIGARETTI
+			return PESO_SIGARETTI * m_qta_conf;
+		}
 	}
-	return 0;
+	
+	// GRAMMI
+	return (m_qta_conf / 1000);
 }
 
-double Articolo::getKg(double pezzi) const
-{
-	switch (m_cat)
-	{
-	case 1:	// SIGARETTE
-		return pezzi * 0.001;
-	case 2:	// SIGARI	
-		return pezzi * 0.005;
-	case 3:	// SIGARETTI
-		return pezzi * 0.025;
-	default:
-		return pezzi;
-	}
-}
+
+//int Articolo::getPezziPerKg() const
+//{
+//	switch (m_cat)
+//	{
+//	case 1:	// SIGARETTE
+//		return 1000;
+//	case 2:	// SIGARI	
+//		return 200;
+//	case 3:	// SIGARETTI
+//		return 400;
+//	default:
+//		return 1000;
+//	}
+//	return 0;
+//}
+
+//double Articolo::getKg(double pezzi) const
+//{
+//	switch (m_cat)
+//	{
+//	case 1:	// SIGARETTE
+//		return pezzi * 0.001;
+//	case 2:	// SIGARI	
+//		return pezzi * 0.005;
+//	case 3:	// SIGARETTI
+//		return pezzi * 0.002;
+//	default:
+//		return pezzi;
+//	}
+//}
 
 UnitaMisura Articolo::getUnitaMisura() const
 {
@@ -96,6 +117,21 @@ UnitaMisura Articolo::getUnitaMisura() const
 bool Articolo::operator==(const Articolo & rhs)
 {
 	return m_id == rhs.m_id;
+}
+
+Articolo & Articolo::operator=(const Articolo & rhs)
+{
+	m_id = rhs.m_id;
+	m_nome = rhs.m_nome;
+	m_codice = rhs.m_codice;
+	m_unita_misura = rhs.m_unita_misura;
+	m_prezzo_kg = rhs.m_prezzo_kg;
+	m_prezzo_conf = rhs.m_prezzo_conf;
+	m_qta_conf = rhs.m_qta_conf;
+	m_confezione = rhs.m_confezione;
+	m_barcode = rhs.m_barcode;
+	m_cat = rhs.m_cat;
+	return *this;
 }
 
 ListaArticoli::ListaArticoli(std::vector<Articolo> articoli)

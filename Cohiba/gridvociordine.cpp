@@ -8,20 +8,17 @@ GridVociOrdine::GridVociOrdine()
 
 void GridVociOrdine::OnInitialUpdate()
 {
+	// font
+	SendMessage(ZGM_SETDEFAULTFONT, 4, 0);
+
 	// colonne
 	SendMessage(ZGM_DIMGRID, m_cols, 0);
 
 	// prealloco le righe
-	SendMessage(ZGM_ALLOCATEROWS, m_voci.size(), 0);
+	SendMessage(ZGM_ALLOCATEROWS, m_ordine.getVoci().size(), 0);
 
 	// nascondo il numero di riga
 	SendMessage(ZGM_SHOWROWNUMBERS, false, 0);
-
-	// larghezza colonne
-	SendMessage(ZGM_SETCOLWIDTH, 2, 200);
-	SendMessage(ZGM_SETCOLWIDTH, 3, 80);
-	SendMessage(ZGM_SETCOLWIDTH, 4, 300);
-	SendMessage(ZGM_SETCOLWIDTH, 5, 80);
 
 	// righe alternate
 	SendMessage(ZGM_ALTERNATEROWCOLORS, true, 8);
@@ -35,37 +32,40 @@ void GridVociOrdine::OnInitialUpdate()
 	int idx = 1;
 	SetCellValue(idx++, _T("CODICE"));
 	SetCellValue(idx++, _T("NOME"));
-	SetCellValue(idx++, _T("CONF"));
-	SetCellValue(idx++, _T("PREZZO KG"));
+	SetCellValue(idx++, _T("N°"));
+	SetCellValue(idx++, _T("COSTO UN"));
 	SetCellValue(idx++, _T("KG"));
-	SetCellValue(idx++, _T("TOTALE"));
+	SetCellValue(idx++, _T("TOT"));
 
 	// larghezza colonne
 	SendMessage(ZGM_SETCOLWIDTH, 1, 80);
-	SendMessage(ZGM_SETCOLWIDTH, 2, 300);
-	SendMessage(ZGM_SETCOLWIDTH, 3, 60);
-	SendMessage(ZGM_SETCOLWIDTH, 4, 80);
-	SendMessage(ZGM_SETCOLWIDTH, 5, 100);
+	SendMessage(ZGM_SETCOLWIDTH, 2, 670);
+	SendMessage(ZGM_SETCOLWIDTH, 3, 65);
+	SendMessage(ZGM_SETCOLWIDTH, 4, 100);
+	SendMessage(ZGM_SETCOLWIDTH, 5, 120);
 	SendMessage(ZGM_SETCOLWIDTH, 6, 100);
+
+	 // colori personalizzati
+	SendMessage(ZGM_SETCOLOR, 20, (LPARAM)((DWORD)(RGB(220, 220, 220))));
 
 	// dati
 	Update();
 }
 
-void GridVociOrdine::SetVoci(ListaVociOrdine voci)
+void GridVociOrdine::SetOrdine(const Ordine& ordine)
 {
-	m_voci = voci;
+	m_ordine = ordine;
 }
 
 bool GridVociOrdine::HasVoceAt(size_t rowIndex)
 {
-	return m_voci.size() >= rowIndex;
+	return m_ordine.getVoci().size() >= rowIndex;
 }
 
 VoceOrdine GridVociOrdine::GetVoceAt(size_t rowIndex)
 {
 	int index = SendMessage(ZGM_GETITEMDATA, rowIndex * m_cols + 1, 0);
-	return m_voci[index];
+	return m_ordine.getVoci()[index];
 }
 
 GridVociOrdine::~GridVociOrdine()
@@ -81,20 +81,60 @@ void GridVociOrdine::Update()
 	int idx = AppendRow();
 
 	// righe
-	for (size_t i = 0; i < m_voci.size(); i++)
+	for (size_t i = 0; i < m_ordine.getVoci().size(); i++)
 	{
-		VoceOrdine vo = m_voci[i];
+		VoceOrdine vo = m_ordine.getVoci()[i];
 		SendMessage(ZGM_SETITEMDATA, idx, i);
 		SetCellValue(idx++, vo.getCodice());
-		SetCellValue(idx++, vo.getNome());
-		SendMessage(ZGM_SETCELLNUMPRECISION, idx, 0);	// NUM CONFEZIONI
+		SetCellValue(idx++, vo.toString());
+		
+		// NUM CONFEZIONI
+		SendMessage(ZGM_SETCELLNUMPRECISION, idx, 0);
 		SetCellValue(idx++, vo.getNumConfezioni());
-		SetCellValue(idx++, vo.getPrezzoUnitKg());
-		SendMessage(ZGM_SETCELLBCOLOR, idx, 3);
-		SendMessage(ZGM_SETCELLNUMPRECISION, idx, 3);	// PESO IN KG
-		SetCellValue(idx++, vo.getQtaKG());
-		SetCellValue(idx++, vo.getPrezzoTotKg());
+		
+		SetCellValue(idx++, vo.getPrezzoConfezione());
+		
+		// PESO IN KG (DA ORDINARE)
+		//SendMessage(ZGM_SETCELLBCOLOR, idx, 3);
+		SendMessage(ZGM_SETCELLNUMPRECISION, idx, 3);	
+		SetCellValue(idx++, vo.getPesoKG());	
+
+		SetCellValue(idx++, vo.getPrezzoTotale());
 	}
 
+	// Aggiungo righe a buffo
+	for (int r = 0; r < 10; r++)
+	{
+		AppendRow();
+	}
+
+	//// Riga Totale	
+	//idx = AppendRow();
+	//FormatCell(idx, 20); SetCellValue(idx++, "");
+	//FormatCell(idx, 20, 0, 5); SetCellValue(idx++, "TOTALI");
+	//SendMessage(ZGM_SETCELLJUSTIFY, idx - 1, 7);
+	//FormatCell(idx, 20, 0, 5); SetCellValue(idx++, m_ordine.getTotaleConfezioni());	// num_confezioni
+	//FormatCell(idx, 20, 0, 5); SetCellValue(idx++, "");
+	//SendMessage(ZGM_SETCELLNUMPRECISION, idx, 3); 
+	//FormatCell(idx, 20, 0, 5); SetCellValue(idx++, m_ordine.getPesoTotale());	// KG tot
+	//FormatCell(idx, 20, 0, 5); SetCellValue(idx++, m_ordine.getPrezzoTotale());		// prezzo tot
+
+	//// Riga Aggio
+	//idx = AppendRow();
+	//FormatCell(idx, 20); SetCellValue(idx++, "");
+	//FormatCell(idx, 20); SetCellValue(idx++, "");
+	//FormatCell(idx, 20); SetCellValue(idx++, "");
+	//FormatCell(idx, 20); SetCellValue(idx++, "");
+	//FormatCell(idx, 20, 0, 5); SetCellValue(idx++, "Aggio");
+	//SendMessage(ZGM_SETCELLJUSTIFY, idx - 1, 7);
+	//FormatCell(idx, 20, 0, 5); SetCellValue(idx, m_ordine.getAggioTotale());		// Aggio totale
+
 	SendMessage(ZGM_SETTOPROW, top, 0);
+}
+
+void GridVociOrdine::FormatCell(int cellIndex, int bgColor, int fgColor, int font) const
+{
+	SendMessage(ZGM_SETCELLBCOLOR, cellIndex, bgColor);
+	SendMessage(ZGM_SETCELLFCOLOR, cellIndex, fgColor);
+	SendMessage(ZGM_SETCELLFONT, cellIndex, font);
 }

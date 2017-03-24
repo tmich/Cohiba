@@ -5,7 +5,7 @@ class VoceOrdine
 {
 public:
 	//VoceOrdine();
-	VoceOrdine(Articolo art, double qta);
+	VoceOrdine(Articolo art, int confezioni);
 	virtual ~VoceOrdine();
 
 	std::wstring getNome() const { return m_articolo.getNome(); }
@@ -14,16 +14,21 @@ public:
 	std::wstring getConfezione() const { return m_articolo.getConfezione(); }
 	std::wstring getBarcode() const { return m_articolo.getBarcode(); }
 	std::wstring getCategoria() const { return m_articolo.getCategoria(); }
-	double getQtaKG() const { return m_qtaKG; }
-	void setQtaKG(double kg);
-	double getPrezzoTotKg() const;
-	double getNumConfezioni() const;
+	void setNumConfezioni(int num_confezioni);
+	double getPrezzoConfezione() const;
+	double getPrezzoTotale() const;
+	int getNumConfezioni() const;
+	double getPesoKG() const;
 	Articolo getArticolo() const { return m_articolo; }
+	double getAggio() const;
+	std::wstring toString() const;
+
 	VoceOrdine operator=(const VoceOrdine&);
 	bool operator==(const VoceOrdine&);
 protected:
 	Articolo m_articolo;
-	double m_qtaKG;
+	// numero delle confezioni da ordinare;
+	int m_confezioni;
 };
 
 class ListaVociOrdine
@@ -50,7 +55,13 @@ public:
 	Ordine();
 	virtual ~Ordine() {};
 	void aggiungi(const VoceOrdine& voce);
+	void rimuovi(const VoceOrdine& voce);
+	
 	double getPrezzoTotale() const;
+	int getTotaleConfezioni() const;
+	double getPesoTotale() const;
+	double getAggioTotale() const;
+
 	ListaVociOrdine getVoci() const;
 protected:
 	std::vector<VoceOrdine> m_voci;

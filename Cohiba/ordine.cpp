@@ -6,8 +6,8 @@
 //{
 //}
 
-VoceOrdine::VoceOrdine(Articolo art, double qta)
-	: m_articolo{ art }, m_qtaKG{ qta }
+VoceOrdine::VoceOrdine(Articolo art, int confezioni)
+	: m_articolo{ art }, m_confezioni{ confezioni }
 {
 }
 
@@ -15,29 +15,54 @@ VoceOrdine::~VoceOrdine()
 {
 }
 
-void VoceOrdine::setQtaKG(double qta)
+//void VoceOrdine::setQtaKG(double qta)
+//{
+//	m_qtaKG = qta;
+//}
+
+double VoceOrdine::getPrezzoConfezione() const
 {
-	m_qtaKG = qta;
+	return m_articolo.getPrezzoConfezione();
 }
 
-double VoceOrdine::getPrezzoTotKg() const
+double VoceOrdine::getPrezzoTotale() const
 {
-	return m_articolo.getPrezzoKg() * m_qtaKG;
+	//return m_articolo.getPrezzoKg() * getPesoKG();
+	return m_articolo.getPrezzoConfezione() * m_confezioni;
 }
 
-double VoceOrdine::getNumConfezioni() const
+void VoceOrdine::setNumConfezioni(int num_confezioni)
 {
-	double pezziTotali = m_qtaKG * m_articolo.getPezziPerKg();
-	double confezioni = pezziTotali / m_articolo.getPezziPerConfezione();
-	//int num = (int)((m_articolo.getPezziPerKg() * m_qtaKG) / m_articolo.getPezziPerConfezione());
-	return confezioni;
+	m_confezioni = num_confezioni;
+}
+
+int VoceOrdine::getNumConfezioni() const
+{
+	return m_confezioni;
+}
+
+double VoceOrdine::getPesoKG() const
+{
+	// per sapere il peso totale, devo moltiplicare il peso singolo dell'articolo per il numero delle confezioni da ordinare
+	double peso_un = m_articolo.getPesoUnitario();
+	double peso_tot = peso_un * m_confezioni;
+	return peso_tot;
+}
+
+double VoceOrdine::getAggio() const
+{
+	return (getPrezzoTotale() / 100) * m_articolo.getPercentualeAggio();
+}
+
+std::wstring VoceOrdine::toString() const
+{
+	return getNome() + _T(" ") + getConfezione();
 }
 
 VoceOrdine VoceOrdine::operator=(const VoceOrdine & rhs)
 {
 	m_articolo = rhs.m_articolo;
-	m_qtaKG = rhs.m_qtaKG;
-
+	m_confezioni = rhs.m_confezioni;
 	return *this;
 }
 
@@ -64,11 +89,20 @@ void Ordine::aggiungi(const VoceOrdine & voce)
 	}
 }
 
+void Ordine::rimuovi(const VoceOrdine & voce)
+{
+	auto it = std::find(m_voci.begin(), m_voci.end(), voce);
+	if (it != m_voci.end())
+	{
+		m_voci.erase(it, it + 1);
+	}
+}
+
 double Ordine::getPrezzoTotale() const
 {
 	double tot = 0.0;
 	for (auto const& vo : m_voci)
-		tot += vo.getPrezzoTotKg();
+		tot += vo.getPrezzoTotale();
 
 	return tot;
 }
@@ -76,6 +110,33 @@ double Ordine::getPrezzoTotale() const
 ListaVociOrdine Ordine::getVoci() const
 {
 	return m_voci;
+}
+
+int Ordine::getTotaleConfezioni() const
+{
+	int tot = 0;
+	for (auto const& vo : m_voci)
+		tot += vo.getNumConfezioni();
+
+	return tot;
+}
+
+double Ordine::getPesoTotale() const
+{
+	double tot = 0.0;
+	for (auto const& vo : m_voci)
+		tot += vo.getPesoKG();
+
+	return tot;
+}
+
+double Ordine::getAggioTotale() const
+{
+	double aggio = 0.0;
+	for (auto const& vo : m_voci)
+		aggio += vo.getAggio();
+
+	return aggio;
 }
 
 ListaVociOrdine::ListaVociOrdine(std::vector<VoceOrdine> voci)

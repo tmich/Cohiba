@@ -3,7 +3,7 @@
 #include "wc_to_mb.h"
 
 ArticoloDao::ArticoloDao()
-	: m_Query{ "SELECT id, codice, nome, confezione, prezzo_kg, prezzo_confezione, unita_misura, qta, categoria_id, barcode from articolo where cancellato=0 " }
+	: m_Query{ "SELECT id, codice, nome, confezione, prezzo_kg, prezzo_confezione, unita_misura, qta, categoria_id, barcode, aggio_perc from articolo where cancellato=0 " }
 {
 }
 
@@ -81,6 +81,25 @@ Articolo ArticoloDao::perCodice(int codice)
 	}
 }
 
+Articolo ArticoloDao::perBarcode(std::wstring barcode)
+{
+	std::string query = m_Query + " and barcode=?;";
+	MyConnectionProvider myconn;
+	mariadb::connection_ref conn = myconn.connect();
+	mariadb::statement_ref stmt = conn->create_statement(query.c_str());
+	stmt->set_wstring(0, barcode);
+	mariadb::result_set_ref rs = stmt->query();
+	if (rs->row_count() == 0)
+	{
+		throw std::exception("non trovato");
+	}
+	else
+	{
+		rs->next();
+		return fromResultset(rs);
+	}
+}
+
 Articolo ArticoloDao::fromResultset(mariadb::result_set_ref rs)
 {
 	int id = rs->get_unsigned32("id");
@@ -100,6 +119,7 @@ Articolo ArticoloDao::fromResultset(mariadb::result_set_ref rs)
 	{
 		bcod = rs->get_wstring("barcode");
 	}
+	double aggio = stringutils::to_double(rs->get_string("aggio_perc"));
 
-	return Articolo(id, codice, nome, prezzo_kg, prezzo_confezione, conf, um, qta, cat, bcod);
+	return Articolo(id, codice, nome, prezzo_kg, prezzo_confezione, conf, um, qta, cat, bcod, aggio);
 }
