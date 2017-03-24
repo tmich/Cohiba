@@ -11,23 +11,30 @@ ArticoloDao::~ArticoloDao()
 {
 }
 
+/* static */
+ListaArticoli ArticoloDao::m_CachedListaArticoli;
+
 ListaArticoli ArticoloDao::all()
 {
-	ListaArticoli m_articoli;
-	
-	MyConnectionProvider myconn;
-	mariadb::connection_ref conn = myconn.connect();
-	mariadb::statement_ref stmt = conn->create_statement(m_Query.c_str());
-	mariadb::result_set_ref rs = stmt->query();
-
-	// righe
-	while (rs->next())
+	if (m_CachedListaArticoli.size() == 0)
 	{
-		Articolo art = fromResultset(rs);
-		m_articoli.append(art);
-	}
+		ListaArticoli m_articoli;
 
-	return m_articoli;
+		MyConnectionProvider myconn;
+		mariadb::connection_ref conn = myconn.connect();
+		mariadb::statement_ref stmt = conn->create_statement(m_Query.c_str());
+		mariadb::result_set_ref rs = stmt->query();
+
+		// righe
+		while (rs->next())
+		{
+			Articolo art = fromResultset(rs);
+			m_articoli.append(art);
+		}
+
+		m_CachedListaArticoli = m_articoli;
+	}
+	return m_CachedListaArticoli;
 }
 
 void ArticoloDao::save(Articolo & articolo)

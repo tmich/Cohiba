@@ -91,7 +91,8 @@ void GridVociOrdine::Update()
 		SetCellValue(idx++, vo.getNumConfezioni());
 		SetCellValue(idx++, vo.getPrezzoUnitKg());
 		SendMessage(ZGM_SETCELLBCOLOR, idx, 3);
-		SetCellValue(idx++, vo.getQta());
+		SendMessage(ZGM_SETCELLNUMPRECISION, idx, 3);	// PESO IN KG
+		SetCellValue(idx++, vo.getQtaKG());
 		SetCellValue(idx++, vo.getPrezzoTotKg());
 	}
 

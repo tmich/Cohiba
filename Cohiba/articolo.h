@@ -1,5 +1,11 @@
 #pragma once
 
+enum UnitaMisura
+{
+	GRAMMI,
+	PEZZI
+};
+
 class Articolo
 {
 	Articolo();
@@ -29,8 +35,11 @@ public:
 	std::wstring getCategoria() const;
 	void setCategoria(int categoria) { m_cat = categoria; }
 
-	double getQtaPerConfezione() const { return m_qta_conf; }
-	int getQtaPerKg() const;
+	double getPezziPerConfezione() const { return m_qta_conf; }
+	int getPezziPerKg() const;
+	double getKg(double pezzi) const;
+
+	UnitaMisura getUnitaMisura() const;
 
 	bool operator==(const Articolo&);
 protected:

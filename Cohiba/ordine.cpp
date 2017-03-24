@@ -7,7 +7,7 @@
 //}
 
 VoceOrdine::VoceOrdine(Articolo art, double qta)
-	: m_articolo{ art }, m_qta{ qta }
+	: m_articolo{ art }, m_qtaKG{ qta }
 {
 }
 
@@ -15,26 +15,28 @@ VoceOrdine::~VoceOrdine()
 {
 }
 
-void VoceOrdine::setQta(double qta)
+void VoceOrdine::setQtaKG(double qta)
 {
-	m_qta = qta;
+	m_qtaKG = qta;
 }
 
 double VoceOrdine::getPrezzoTotKg() const
 {
-	return m_articolo.getPrezzoKg() * m_qta;
+	return m_articolo.getPrezzoKg() * m_qtaKG;
 }
 
 double VoceOrdine::getNumConfezioni() const
 {
-	int num = (int)((m_articolo.getQtaPerKg() * m_qta) / m_articolo.getQtaPerConfezione());
-	return num;
+	double pezziTotali = m_qtaKG * m_articolo.getPezziPerKg();
+	double confezioni = pezziTotali / m_articolo.getPezziPerConfezione();
+	//int num = (int)((m_articolo.getPezziPerKg() * m_qtaKG) / m_articolo.getPezziPerConfezione());
+	return confezioni;
 }
 
 VoceOrdine VoceOrdine::operator=(const VoceOrdine & rhs)
 {
 	m_articolo = rhs.m_articolo;
-	m_qta = rhs.m_qta;
+	m_qtaKG = rhs.m_qtaKG;
 
 	return *this;
 }

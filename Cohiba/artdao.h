@@ -14,4 +14,5 @@ public:
 protected:
 	Articolo fromResultset(const mariadb::result_set_ref rs);
 	std::string m_Query;
+	static ListaArticoli m_CachedListaArticoli;
 };

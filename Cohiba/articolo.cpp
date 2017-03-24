@@ -50,7 +50,7 @@ std::wstring Articolo::getCategoria() const
 }
 
 
-int Articolo::getQtaPerKg() const
+int Articolo::getPezziPerKg() const
 {
 	switch (m_cat)
 	{
@@ -64,6 +64,33 @@ int Articolo::getQtaPerKg() const
 		return 1000;
 	}
 	return 0;
+}
+
+double Articolo::getKg(double pezzi) const
+{
+	switch (m_cat)
+	{
+	case 1:	// SIGARETTE
+		return pezzi * 0.001;
+	case 2:	// SIGARI	
+		return pezzi * 0.005;
+	case 3:	// SIGARETTI
+		return pezzi * 0.025;
+	default:
+		return pezzi;
+	}
+}
+
+UnitaMisura Articolo::getUnitaMisura() const
+{
+	if (m_unita_misura == "P")
+	{
+		return UnitaMisura::PEZZI;
+	}
+	else
+	{
+		return UnitaMisura::GRAMMI;
+	}
 }
 
 bool Articolo::operator==(const Articolo & rhs)

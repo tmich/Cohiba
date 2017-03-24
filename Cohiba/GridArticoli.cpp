@@ -85,7 +85,7 @@ void GridArticoli::Update()
 	for (size_t i = 0; i < m_articoli.size(); i++)
 	{	
 		// massimo...
-		if (i == 300)
+		if (i == MAX)
 			break;
 
 		Articolo a = m_articoli[i];

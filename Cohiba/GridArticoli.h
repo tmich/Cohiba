@@ -12,6 +12,7 @@ public:
 	Articolo& GetArticoloAt(int rowIndex);
 	void Update();
 protected:
+	const int MAX = 100;
 	void OnInitialUpdate() override;
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
 	

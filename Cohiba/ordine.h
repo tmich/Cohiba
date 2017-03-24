@@ -14,16 +14,16 @@ public:
 	std::wstring getConfezione() const { return m_articolo.getConfezione(); }
 	std::wstring getBarcode() const { return m_articolo.getBarcode(); }
 	std::wstring getCategoria() const { return m_articolo.getCategoria(); }
-	double getQta() const { return m_qta; }
-	void setQta(double qta);
+	double getQtaKG() const { return m_qtaKG; }
+	void setQtaKG(double kg);
 	double getPrezzoTotKg() const;
 	double getNumConfezioni() const;
-
+	Articolo getArticolo() const { return m_articolo; }
 	VoceOrdine operator=(const VoceOrdine&);
 	bool operator==(const VoceOrdine&);
 protected:
 	Articolo m_articolo;
-	double m_qta;
+	double m_qtaKG;
 };
 
 class ListaVociOrdine
