@@ -186,6 +186,7 @@
     <ClInclude Include="gridvociordine.h" />
     <ClInclude Include="gui.h" />
     <ClInclude Include="ipaddress.h" />
+    <ClInclude Include="magazzino.h" />
     <ClInclude Include="Mainfrm.h" />
     <ClInclude Include="ordine.h" />
     <ClInclude Include="Resource.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="gridvociordine.cpp" />
     <ClCompile Include="gui.cpp" />
     <ClCompile Include="ipaddress.cpp" />
+    <ClCompile Include="magazzino.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Dbconn.cpp" />
     <ClCompile Include="Mainfrm.cpp" />

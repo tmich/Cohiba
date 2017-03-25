@@ -1,6 +1,7 @@
 #pragma once
 #include "gridvociordine.h"
 #include "ordine.h"
+#include "View.h"
 
 class CColorEdit : public CEdit
 {
@@ -9,7 +10,7 @@ protected:
 	virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
 };
 
-class OrdineDialog : public CDialog
+class OrdineDialog : public CView
 {
 public:
 	OrdineDialog();

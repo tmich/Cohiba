@@ -6,4 +6,5 @@ namespace guiutils
 	void Error(std::wstring message, HWND parent = 0);
 	void Warning(std::wstring message, HWND parent = 0);
 	void Notify(std::wstring message, HWND parent = 0);
+	int Confirm(std::wstring message, HWND parent = 0);
 }

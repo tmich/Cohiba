@@ -1,25 +1,32 @@
 #include "stdafx.h"
 #include "App.h"
 #include "view.h"
-
+#include "Resource.h"
+#include "gui.h"
 
 CView::CView()
+	:CView{ IDD_DIALOG1 }
+{
+}
+
+CView::CView(UINT nResID)
+	: CDialog{ nResID }, m_Saved{ true }
 {
 }
 
 void CView::OnDraw(CDC& dc)
 // OnDraw is called when part or all of the window needs to be redrawn
 {
-	CRect rc = GetClientRect();
+	//CRect rc = GetClientRect();
 
 	// Centre some text in our view window
-	dc.DrawText(_T("Cohiba"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	//dc.DrawText(_T("Benvenuti in Cohiba!"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 void CView::OnInitialUpdate()
 // OnInitialUpdate is called immediately after the window is created
 {
-	TRACE("View window created\n");
+	//TRACE("View window created\n");
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -63,4 +70,13 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);
+}
+
+bool CView::ConfermaChiusura() const
+{
+	if (!m_Saved)
+	{
+		int res = guiutils::Confirm(_T("Chiudere la finestra? Tutto il lavoro non salvato sarà perso."), *this);
+		return res == IDYES;
+	}
 }

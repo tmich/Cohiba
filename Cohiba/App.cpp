@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "App.h"
+#include "gui.h"
 
 CFrameApp::CFrameApp()
 {
@@ -26,7 +27,7 @@ BOOL CFrameApp::InitInstance()
 	hgridmod = ::LoadLibrary(_T("zeegrid.dll"));
 	if (!hgridmod)
 	{
-		m_Frame.Error(_T("Unable to load zeegrid.dll"));
+		guiutils::Error(_T("Unable to load zeegrid.dll"), m_Frame);
 		::PostQuitMessage(0);
 	}
 

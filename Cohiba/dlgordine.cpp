@@ -6,7 +6,7 @@
 #include "gui.h"
 
 OrdineDialog::OrdineDialog()
-	: CDialog{ IDD_ORDINE }
+	: CView{ IDD_ORDINE }
 {
 }
 
@@ -38,9 +38,6 @@ void OrdineDialog::ModificaVoce(VoceOrdine & voce)
 	m_btnAddVoce.EnableWindow(true);
 	m_btnAddVoce.SendMessageW(DM_SETDEFID, IDC_BTNADDVOCE, 0);
 	m_txtNumConfezioni.SetFocus();
-
-	//m_txtKG.SetReadOnly(um == UnitaMisura::PEZZI);
-	//m_txtNumConfezioni.SetReadOnly(um == UnitaMisura::GRAMMI);
 }
 
 void OrdineDialog::OnAggiungiVoce()
@@ -60,12 +57,19 @@ void OrdineDialog::OnAggiungiVoce()
 		m_Ordine.aggiungi(*m_VoceDaModificare);
 		m_Grid.SetOrdine(m_Ordine);
 		m_Grid.Update();
+		m_Saved = false;
 
 		AggiornaTotali();
 		VoceAggiunta();
 	}
 	catch (const std::invalid_argument&)
 	{
+		m_txtNumConfezioni.SetFocus();
+		TRACE(_T("invalid_argument in OrdineDialog::OnAggiungiVoce (non c'era la qta)\n"));
+	}
+	catch (const std::exception& ex)
+	{
+		TRACE(CString(ex.what()).c_str());
 		m_txtNumConfezioni.SetFocus();
 	}
 }
@@ -103,6 +107,12 @@ void OrdineDialog::OnCercaArticolo()
 void OrdineDialog::OnCodiceArticolo()
 {
 	std::wstring codart = m_txtCodArt.GetWindowTextW();
+	
+	if (codart.size() == 0)
+	{
+		return;
+	}
+
 	try
 	{
 		int codice = std::stoi(codart);
@@ -119,10 +129,12 @@ void OrdineDialog::OnCodiceArticolo()
 	catch (const std::invalid_argument&)
 	{
 		// non è un numero
+		TRACE(_T("invalid_argument in OrdineDialog::OnCodiceArticolo (non un numero)\n"));
 	}
-	catch (const std::exception&)
+	catch (const std::exception& ex)
 	{
 		//	non trovato
+		TRACE(CString(ex.what()).c_str());
 		VoceAggiunta();
 	}
 }
@@ -139,9 +151,10 @@ void OrdineDialog::OnBarcode()
 			VoceOrdine vo{ art, 0 };
 			ModificaVoce(vo);
 		}
-		catch (const std::exception&)
+		catch (const std::exception& ex)
 		{
 			//	non trovato
+			TRACE(CString(ex.what()).c_str());
 			VoceAggiunta();
 		}
 	}
@@ -153,18 +166,20 @@ void OrdineDialog::OnQtaConfezioni()
 	if (m_VoceDaModificare.get() != nullptr)
 	{
 		CString s_num = m_txtNumConfezioni.GetWindowTextW();
-		int numConfezioni = 0;
+		int numConfezioni;
 		try
 		{
 			numConfezioni = std::stoi(s_num.c_str());
-			m_VoceDaModificare->setNumConfezioni(numConfezioni);
-			double kg = m_VoceDaModificare->getPesoKG();
-			m_txtKG.SetWindowTextW(stringutils::to_wstring(kg, 3).c_str());
 		}
 		catch (std::invalid_argument&)
 		{
-			throw;
+			numConfezioni = 0;
+			TRACE(_T("invalid_argument in OrdineDialog::OnQtaConfezioni (settato a 0)\n"));
 		}
+
+		m_VoceDaModificare->setNumConfezioni(numConfezioni);
+		double kg = m_VoceDaModificare->getPesoKG();
+		m_txtKG.SetWindowTextW(stringutils::to_wstring(kg, 3).c_str());
 	}
 }
 
@@ -192,7 +207,8 @@ void OrdineDialog::VoceAggiunta()
 	m_txtKG.SetWindowTextW(_T(""));
 	m_txtNumConfezioni.SetWindowTextW(_T(""));
 	m_txtCodArt.SetFocus();
-	m_VoceDaModificare.release();
+	/*auto ptr = m_VoceDaModificare.release();
+	delete ptr;*/
 	m_btnAddVoce.EnableWindow(false);
 	m_btnDelVoce.EnableWindow(false);
 }
@@ -213,8 +229,8 @@ BOOL OrdineDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 		if (HIWORD(wParam) == EN_KILLFOCUS)	OnBarcode();		return TRUE;
 	case IDC_ORDGRID:
 		if (HIWORD(wParam) == ZGN_DOUBLECLICKREADONLY)	OnGridDblClick();	return TRUE;
-	case IDC_ORDQTACONF:
-		if (HIWORD(wParam) == EN_KILLFOCUS)	OnQtaConfezioni();	return TRUE;
+	/*case IDC_ORDQTACONF:
+		if (HIWORD(wParam) == EN_CHANGE)	OnQtaConfezioni();	return TRUE;*/
 	}
 
 	return 0;
@@ -254,6 +270,8 @@ BOOL OrdineDialog::OnInitDialog()
 
 	// Attach the custom control to a CWnd object
 	m_Grid.AttachDlgItem(IDC_ORDGRID, *this);
+
+	m_txtNumConfezioni.SetLimitText(4);
 
 	// Create font
 	titleFont = CreateFont(28, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, OUT_DEFAULT_PRECIS,

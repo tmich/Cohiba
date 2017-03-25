@@ -100,6 +100,25 @@ Articolo ArticoloDao::perBarcode(std::wstring barcode)
 	}
 }
 
+Articolo ArticoloDao::perId(int id)
+{
+	std::string query = m_Query + " and id=?;";
+	MyConnectionProvider myconn;
+	mariadb::connection_ref conn = myconn.connect();
+	mariadb::statement_ref stmt = conn->create_statement(query.c_str());
+	stmt->set_unsigned32(0, id);
+	mariadb::result_set_ref rs = stmt->query();
+	if (rs->row_count() == 0)
+	{
+		throw std::exception("non trovato");
+	}
+	else
+	{
+		rs->next();
+		return fromResultset(rs);
+	}
+}
+
 Articolo ArticoloDao::fromResultset(mariadb::result_set_ref rs)
 {
 	int id = rs->get_unsigned32("id");

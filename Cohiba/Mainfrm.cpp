@@ -4,10 +4,10 @@
 #include "Dbconn.h"
 #include "dbsettings.h"
 #include <mariadb++\exceptions.hpp>
-#include "View.h"
 #include "DlgArticoli.h"
 #include "dlgsettings.h"
 #include "dlgordine.h"
+#include "gui.h"
 
 
 CMainFrame::CMainFrame()
@@ -91,14 +91,14 @@ void CMainFrame::OnInitialUpdate()
 	catch (const mariadb::exception::connection& cnex)
 	{
 		TRACE(cnex.what());
-		this->Error(cnex.what());
+		guiutils::Error(CString(cnex.what()).c_str());
 		SettingsDialog dlgs;
 		dlgs.DoModal(*this);
 	}
 	catch (const CWinException& winexc)
 	{
 		TRACE(winexc.what());
-		this->Error(_T("Non sono riuscito a leggere il registro di sistema"));
+		guiutils::Error(_T("Non sono riuscito a leggere il registro di sistema"));
 	}
 
 	// a tutto schermo
@@ -272,6 +272,14 @@ BOOL CMainFrame::SaveRegistrySettings()
 	return 0;
 }
 
+void CMainFrame::OnClose()
+{
+	if (m_View->ConfermaChiusura())
+	{
+		Destroy();
+	}
+}
+
 BOOL CMainFrame::OnArticoli()
 {
 	DlgArticoli dlgArticoli;
@@ -281,19 +289,20 @@ BOOL CMainFrame::OnArticoli()
 
 BOOL CMainFrame::OnCaricoMagazzino()
 {
-	m_View = std::make_unique<CView>();
-	SetView(*m_View);
+	if (m_View->ConfermaChiusura())
+	{
+		m_View = std::make_unique<CView>();
+		SetView(*m_View);
+	}
 	return 0;
 }
 
 BOOL CMainFrame::OnNuovoOrdine()
 {
-	m_View = std::make_unique<OrdineDialog>();
-	SetView(*m_View);
+	if (m_View->ConfermaChiusura())
+	{
+		m_View = std::make_unique<OrdineDialog>();
+		SetView(*m_View);
+	}
 	return 0;
-}
-
-void CMainFrame::Error(CString message) const
-{
-	this->MessageBox(message.c_str(), _T("Errore"), MB_ICONERROR | MB_OK);
 }
