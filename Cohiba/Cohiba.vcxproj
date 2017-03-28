@@ -137,7 +137,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;mariadb++.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\sviluppo\mariadb++\mariadb++\Release;"C:\Program Files (x86)\MySQL\MySQL Connector C 6.1\lib";%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "C:\Program Files (x86)\MySQL\MySQL Connector C 6.1\lib\libmysql.dll" "$(OutputPath)"</Command>

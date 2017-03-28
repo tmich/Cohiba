@@ -23,6 +23,6 @@ private:
 	CResizer m_Resizer;
 	CEdit m_txtDescr, m_txtCodice, m_txtBarcode, m_txtCerca, m_txtPrezzoKg, m_txtCategoria, m_txtConfezione;
 	CButton m_btnCerca, m_btnSalva;
-	CStatic m_groupbox;
+	CStatic m_groupbox, m_messaggio;
 	std::unique_ptr<Articolo> m_artmod;
 };

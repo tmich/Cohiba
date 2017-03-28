@@ -79,4 +79,5 @@ bool CView::ConfermaChiusura() const
 		int res = guiutils::Confirm(_T("Chiudere la finestra? Tutto il lavoro non salvato sarà perso."), *this);
 		return res == IDYES;
 	}
+	return true;
 }

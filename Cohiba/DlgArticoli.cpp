@@ -26,6 +26,7 @@ BOOL DlgArticoli::OnInitDialog()
 	AttachItem(IDC_BTNCERCAART, m_btnCerca);
 	AttachItem(IDC_BTNSALVAART, m_btnSalva);
 	AttachItem(IDC_GROUPBOX1, m_groupbox);
+	AttachItem(IDC_LBLMESSAGGIO, m_messaggio);
 	
 	// Attach the custom control to a CWnd object
 	m_Grid.AttachDlgItem(IDC_CUSTOM1, *this);
@@ -136,7 +137,9 @@ void DlgArticoli::UpdateArticolo()
 		m_txtPrezzoKg.SetWindowTextW(przkg);
 		m_txtConfezione.SetWindowTextW(m_artmod->getConfezione().c_str());
 		m_txtCategoria.SetWindowTextW(m_artmod->getCategoria().c_str());
+		m_messaggio.SetWindowTextW(_T(""));
 		m_btnSalva.EnableWindow(true);
+		m_txtBarcode.SetFocus();
 	}
 	else
 	{
@@ -177,8 +180,9 @@ void DlgArticoli::OnSalvaArticolo()
 			artdao.save(*m_artmod);
 			CString msg;
 			msg.LoadStringW(IDS_OKARTSALVA);
-			guiutils::Notify(msg.c_str(), *this);
-			m_Grid.Update();
+			//guiutils::Notify(msg.c_str(), *this);
+			m_messaggio.SetWindowTextW(msg);
+			//m_Grid.Update();
 		}
 		catch (const std::exception& exc)
 		{
